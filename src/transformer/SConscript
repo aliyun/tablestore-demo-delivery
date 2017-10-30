@@ -1,0 +1,12 @@
+# -*- python -*-
+Import('env')
+
+py = env.Install('fcli/', env.Glob('py/*'))
+
+transformer = env.fcli_update_function(
+    'transformer.log', 'fcli/',
+    handler='transformer.main',
+    service='delivery-demo',
+    function='transformer')
+env.Depends(transformer, [py])
+env.Alias('FC', transformer)

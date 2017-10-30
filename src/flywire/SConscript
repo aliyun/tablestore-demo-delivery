@@ -1,0 +1,12 @@
+# -*- python -*-
+Import('env')
+
+py = env.Install('fcli/', 'py/flywire.py')
+
+fc = env.fcli_update_function(
+    'flywire.log', 'fcli/',
+    handler='flywire.main',
+    service='delivery-demo',
+    function='flywire')
+env.Depends(fc, [py])
+env.Alias('FC', fc)

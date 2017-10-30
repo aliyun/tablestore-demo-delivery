@@ -1,0 +1,9 @@
+# -*- python -*-
+Import('env')
+
+env.subDir('transformer')
+
+env.subDir('flywire-updater')
+env.subDir('flywire')
+
+env.subDir('accumulator')

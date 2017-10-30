@@ -1,0 +1,11 @@
+#!/bin/env python2.7
+# -*- python -*-
+Import('env')
+
+prepare = env.gobuild('Prepare', 'prepare/')
+env.Depends(prepare, env.Glob('prepare/*'))
+env.Default(prepare)
+
+data_faker = env.gobuild('DataFaker', 'data_faker/')
+env.Depends(data_faker, env.Glob('data_faker/*'))
+env.Default(data_faker)

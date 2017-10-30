@@ -1,0 +1,25 @@
+# -*- python -*-
+Import('env')
+
+import subprocess as sp
+import os.path as op
+import shutil as sh
+import urllib
+
+def _downloadAndUnzip(target, source, env):
+    assert len(source) == 1
+    source = source[0]
+    assert len(target) == 1
+    target = target[0]
+    with open(source.abspath) as fp:
+        url = fp.read().strip()
+    src = urllib.urlopen(url)
+    srcdir = env.Dir(op.dirname(source.abspath))
+    zipfile = srcdir.File('fcli.zip').abspath
+    with open(zipfile, 'wb') as fp:
+        sh.copyfileobj(src, fp)
+    sp.check_call(['unzip', '-d', srcdir.abspath, zipfile])
+
+fcli = env.Command(env.File('fcli'), env.File('url'), _downloadAndUnzip)
+env.Install('$BIN_DIR/', fcli)
+

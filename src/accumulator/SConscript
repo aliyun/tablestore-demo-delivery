@@ -1,0 +1,12 @@
+# -*- python -*-
+Import('env')
+
+py = env.Install('fcli/', 'py/accumulator.py')
+
+fc = env.fcli_update_function(
+    'accumulator.log', 'fcli/',
+    handler='accumulator.main',
+    service='delivery-demo',
+    function='accumulator')
+env.Depends(fc, [py])
+env.Alias('FC', fc)
