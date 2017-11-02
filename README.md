@@ -1,2 +1,1 @@
-# delivery-demo
-A delivery demo on TableStore-FunctionCompute of Yunqi(Hangzhou) 2017
+* [使用手册](https://github.com/aliyun/tablestore-demo-delivery/wiki/user_guide_cn)

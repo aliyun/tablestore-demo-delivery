@@ -42,7 +42,7 @@ func createJournalTable(client ots.TableStoreApi) {
 			Type: &typeInt,
 			Option: &optInc}}
 	meta := ots.TableMeta{
-		TableName: "DeliveryJournal",
+		TableName: "Logbook",
 		SchemaEntry: schema}
 	req := ots.CreateTableRequest{
 		TableMeta: &meta,
@@ -71,7 +71,7 @@ func createDeliveryInfoTable(client ots.TableStoreApi) {
 			Name: &id,
 			Type: &typeStr}}
 	meta := ots.TableMeta{
-		TableName: "DeliveryInfo",
+		TableName: "PackageInfo",
 		SchemaEntry: schema}
 	req := ots.CreateTableRequest{
 		TableMeta: &meta,
@@ -139,7 +139,7 @@ var cities = []city{
 		Lng: 114.06}}
 
 func createOnDeliveryTable(client ots.TableStoreApi) {
-	fmt.Println("创建在途表")
+	fmt.Println("创建气泡表")
 	{
 		id := "DestinationCity"
 		typeStr := ots.PrimaryKeyType_STRING
@@ -148,7 +148,7 @@ func createOnDeliveryTable(client ots.TableStoreApi) {
 				Name: &id,
 				Type: &typeStr}}
 		meta := ots.TableMeta{
-			TableName: "OnDelivery",
+			TableName: "Bubble",
 			SchemaEntry: schema}
 		req := ots.CreateTableRequest{
 			TableMeta: &meta,
@@ -183,7 +183,7 @@ func createOnDeliveryTable(client ots.TableStoreApi) {
 				ColumnName: "value",
 				Value: int64(0)}
 			row := ots.PutRowChange{
-				TableName: "OnDelivery",
+				TableName: "Bubble",
 				PrimaryKey: &pkey,
 				Columns: []ots.AttributeColumn{lat, lng, tp, val},
 				Condition: &ots.RowCondition{
@@ -196,7 +196,7 @@ func createOnDeliveryTable(client ots.TableStoreApi) {
 			}
 		}
 	}
-	fmt.Println("创建在途表，成功")
+	fmt.Println("创建气泡表，成功")
 }
 
 func main() {

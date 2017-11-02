@@ -506,13 +506,24 @@ env.AddMethod(gotest)
 
 # for fcli
 
-def fcli_update_function(env, target, source, **kwargs):
+def _fcli_get_function(env, target, source, kwargs):
+    cmd = [env.File('$BIN_DIR/fcli').abspath, 'function', 'get',
+           '--service-name', kwargs['service'],
+           '--function-name', kwargs['function']]
+    with open('/dev/null') as cin:
+        out = sp.check_output(cmd, stdin=cin)
+    if 'does not exist in service' in out:
+        return 'NOT_EXIST'
+    else:
+        return 'EXIST'
+
+def fcli_upload_function(env, target, source, **kwargs):
     if 'handler' not in kwargs:
-        raise Exception('handler is required in fcli_update_function')
+        raise Exception('handler is required in fcli_upload_function')
     if 'service' not in kwargs:
-        raise Exception('service is required in fcli_update_function')
+        raise Exception('service is required in fcli_upload_function')
     if 'function' not in kwargs:
-        raise Exception('function is required in fcli_update_function')
+        raise Exception('function is required in fcli_upload_function')
     def _fcli(target, source, env):
         assert len(source) == 1
         source = source[0]
@@ -522,7 +533,9 @@ def fcli_update_function(env, target, source, **kwargs):
         target = target[0]
         assert target.isfile() or not target.exists()
 
-        cmd = [env.File('$BIN_DIR/fcli').abspath, 'function', 'update',
+        exists = _fcli_get_function(env, target, source, kwargs)
+        cmd = [env.File('$BIN_DIR/fcli').abspath, 'function', 
+               'update' if exists == 'EXIST' else 'create',
                '--runtime', 'python2.7',
                '--handler', kwargs['handler'],
                '--service-name', kwargs['service'],
@@ -534,15 +547,17 @@ def fcli_update_function(env, target, source, **kwargs):
             cmd += ['--timeout', '%d' % kwargs['timeout']]
         else:
             cmd += ['--timeout', '300']
-        with open('/dev/null') as cin:
-            out = sp.check_output(cmd, stdin=cin)
-        with open(target.abspath, 'wb') as fp:
-            fp.write(out)
+        with open('/dev/null') as cin, open(target.abspath, 'wb') as fp:
+            sp.check_call(cmd, stdin=cin, stdout=fp)
+        with open(target.abspath) as fp:
+            content = fp.read()
+        if content:
+            raise Exception('fail to execute fcli: ' + content)
     env.Command(target, source, _fcli)
     env.Depends(target, '$BIN_DIR/fcli')
     return target
 
-env.AddMethod(fcli_update_function)
+env.AddMethod(fcli_upload_function)
 
 # gogogo
 

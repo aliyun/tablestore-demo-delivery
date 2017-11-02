@@ -3,19 +3,16 @@ from datetime import datetime
 import tablestore as ots
 import codecs
 import logging
-
-OTS_ENDPOINT = 'http://delivery-demo.cn-shanghai.ots.aliyuncs.com'
-OTS_INSTANCE = 'delivery-demo'
-OTS_TABLE = 'Flywire'
+import cfg
 
 LOGGER = logging.getLogger()
 
 def new_ots_client(context):
     cred = context.credentials
-    return ots.OTSClient(OTS_ENDPOINT,
+    return ots.OTSClient(cfg.OTS_ENDPOINT,
                          cred.access_key_id,
                          cred.access_key_secret,
-                         OTS_INSTANCE,
+                         cfg.OTS_INSTANCE,
                          sts_token=cred.security_token)
 
 def align_timestamp(ts):
@@ -39,7 +36,7 @@ def to_req(rows):
                     {'put': [(z, True) for z in y]})
             for x, y in rows]
     row_items = [ots.UpdateRowItem(x, cond) for x in rows]
-    table_item = ots.TableInBatchWriteRowItem(OTS_TABLE, row_items)
+    table_item = ots.TableInBatchWriteRowItem(cfg.OTS_FLYWIRE_TABLE, row_items)
     req = ots.BatchWriteRowRequest()
     req.add(table_item)
     return req

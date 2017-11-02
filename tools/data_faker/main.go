@@ -95,7 +95,7 @@ func newDelivery(client ots.TableStoreApi) {
 			ColumnName: "DestinationCity",
 			Value: genDestinationCity()}
 		chg := ots.PutRowChange{
-			TableName: "DeliveryInfo",
+			TableName: "PackageInfo",
 			PrimaryKey: &pk,
 			Columns: []ots.AttributeColumn{srcCity, destCity},
 			Condition: &ots.RowCondition{
@@ -123,7 +123,7 @@ func newDelivery(client ots.TableStoreApi) {
 			ColumnName: "Scanner",
 			Value: genStandardUuid()}
 		chg := ots.PutRowChange{
-			TableName: "DeliveryJournal",
+			TableName: "Logbook",
 			PrimaryKey: &pk,
 			Columns: []ots.AttributeColumn{opType, scanner},
 			Condition: &ots.RowCondition{
@@ -160,7 +160,7 @@ func newDelivery(client ots.TableStoreApi) {
 			ColumnName: "Scanner",
 			Value: genStandardUuid()}
 		chg := ots.PutRowChange{
-			TableName: "DeliveryJournal",
+			TableName: "Logbook",
 			PrimaryKey: &pk,
 			Columns: []ots.AttributeColumn{opType, scanner},
 			Condition: &ots.RowCondition{
@@ -187,7 +187,7 @@ func newDelivery(client ots.TableStoreApi) {
 			ColumnName: "OpType",
 			Value: "SignOff"}
 		chg := ots.PutRowChange{
-			TableName: "DeliveryJournal",
+			TableName: "Logbook",
 			PrimaryKey: &pk,
 			Columns: []ots.AttributeColumn{opType},
 			Condition: &ots.RowCondition{
