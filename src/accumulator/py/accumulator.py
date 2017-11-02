@@ -4,19 +4,16 @@ import random
 import tablestore as ots
 import codecs
 import logging
-
-OTS_ENDPOINT = 'http://delivery-demo.cn-shanghai.ots.aliyuncs.com'
-OTS_INSTANCE = 'delivery-demo'
-OTS_TABLE = 'OnDelivery'
+import cfg
 
 LOGGER = logging.getLogger()
 
 def new_ots_client(context):
     cred = context.credentials
-    return ots.OTSClient(OTS_ENDPOINT,
+    return ots.OTSClient(cfg.OTS_ENDPOINT,
                          cred.access_key_id,
                          cred.access_key_secret,
-                         OTS_INSTANCE,
+                         cfg.OTS_INSTANCE,
                          sts_token=cred.security_token)
 
 def extract_row_value(row):
@@ -45,12 +42,15 @@ def main(event, context):
         last_backoff = 1
         max_backoff = 512
         while True:
-            _, row, _ = otsc.get_row(OTS_TABLE, [('DestinationCity', city)], columns_to_get=['value'], max_version=1)
+            _, row, _ = otsc.get_row(cfg.OTS_BUBBLE_TABLE, 
+                                     [('DestinationCity', city)], 
+                                     columns_to_get=['value'], 
+                                     max_version=1)
             old_val = extract_row_value(row)
             new_val = old_val + inc_val
             new_row = ots.Row([('DestinationCity', city)], {'put': [('value', new_val)]})
             try:
-                _ = otsc.update_row(OTS_TABLE,
+                _ = otsc.update_row(cfg.OTS_BUBBLE_TABLE,
                                     new_row,
                                     ots.Condition(ots.RowExistenceExpectation.IGNORE,
                                                   ots.SingleColumnCondition('value',

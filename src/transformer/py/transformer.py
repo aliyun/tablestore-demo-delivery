@@ -4,25 +4,21 @@ from datetime import datetime
 import codecs
 import logging
 import tablestore as ots
-
-OTS_ENDPOINT = 'http://delivery-demo.cn-shanghai.ots.aliyuncs.com'
-OTS_INSTANCE = 'delivery-demo'
-FC_ENDPOINT = 'https://1604337383174619.fc.cn-shanghai.aliyuncs.com'
-FC_SERVICE = 'delivery-demo'
+import cfg
 
 LOGGER = logging.getLogger()
 
 def new_ots_client(context):
     cred = context.credentials
-    return ots.OTSClient(OTS_ENDPOINT,
+    return ots.OTSClient(cfg.OTS_ENDPOINT,
                          cred.access_key_id,
                          cred.access_key_secret,
-                         OTS_INSTANCE,
+                         cfg.OTS_INSTANCE,
                          sts_token=cred.security_token)
 
 def new_fc_client(context):
     cred = context.credentials
-    return fc.Client(endpoint=FC_ENDPOINT,
+    return fc.Client(endpoint=cfg.FC_ENDPOINT,
                      accessKeyID=cred.access_key_id,
                      accessKeySecret=cred.access_key_secret,
                      securityToken=cred.security_token)
@@ -80,7 +76,7 @@ def flywire(otsc, fcc, records):
     LOGGER.info('flywire paylod: %s', deliveries)
     if len(deliveries) > 0:
         fcc.async_invoke_function(
-            FC_SERVICE,
+            cfg.FC_SERVICE,
             'flywireUpdater',
             payload=cbor.dumps(deliveries))
     
@@ -104,7 +100,7 @@ def on_delivery(otsc, fcc, records):
     LOGGER.info('accumulator paylod: %s', acc)
     if len(acc) > 0:
         fcc.async_invoke_function(
-            FC_SERVICE,
+            cfg.FC_SERVICE,
             'accumulator',
             payload=cbor.dumps(acc))
     

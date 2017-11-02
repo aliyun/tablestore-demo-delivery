@@ -2,11 +2,12 @@
 Import('env')
 
 py = env.Install('fcli/', 'py/accumulator.py')
+common = env.Install('fcli/', env.Glob('#src/common/*'))
 
-fc = env.fcli_update_function(
+fc = env.fcli_upload_function(
     'accumulator.log', 'fcli/',
     handler='accumulator.main',
     service='delivery-demo',
     function='accumulator')
-env.Depends(fc, [py])
-env.Alias('FC', fc)
+env.Depends(fc, [py, common])
+env.Default(fc)

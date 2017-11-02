@@ -139,7 +139,7 @@ var cities = []city{
 		Lng: 114.06}}
 
 func createOnDeliveryTable(client ots.TableStoreApi) {
-	fmt.Println("创建在途表")
+	fmt.Println("创建气泡表")
 	{
 		id := "DestinationCity"
 		typeStr := ots.PrimaryKeyType_STRING
@@ -196,7 +196,7 @@ func createOnDeliveryTable(client ots.TableStoreApi) {
 			}
 		}
 	}
-	fmt.Println("创建在途表，成功")
+	fmt.Println("创建气泡表，成功")
 }
 
 func main() {
