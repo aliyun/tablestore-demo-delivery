@@ -1,2 +1,1 @@
-# delivery-demo
-A delivery demo on TableStore-FunctionCompute of Yunqi(Hangzhou) 2017
+* [中文版](doc/README.cn.md)
